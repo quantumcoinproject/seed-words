@@ -2,7 +2,7 @@ const SEED_LENGTH = 80;
 
 const SEED_MAP = new Map(); //key is word, items are string corresponding to index1 and index2
 const SEED_REVERSE_MAP = new Map(); //vice-versa of SEED_MAP
-const SEED_HASH = "6272e8ae728cbb8f083d49382c46b098d820f50321451a11f2499242d6f84017";
+const SEED_HASH = "afd26617fb155784a9e89ff35bd1cc40d6715a0f8fbc4f9f535b8ec6fa2bfb11";
 const SEED_FRIENDLY_INDEX_ARRAY = ['a1', 'a2', 'a3', 'a4', 'b1', 'b2', 'b3', 'b4', 'c1', 'c2', 'c3', 'c4', 'd1', 'd2', 'd3', 'd4', 'e1', 'e2', 'e3', 'e4', 'f1', 'f2', 'f3', 'f4', 'g1', 'g2', 'g3', 'g4', 'h1', 'h2', 'h3', 'h4', 'i1', 'i2', 'i3', 'i4', 'j1', 'j2', 'j3', 'j4'];
 var SEED_FRIENDLY_INDEX_REVERSE_ARRAY = [];
 var SEED_INITIALIZED = false;
@@ -28,15 +28,14 @@ function getSeedByteIndicesFromString(indiceKey) {
     return null;
 }
 
-function initializeSeedWordsFromUrl(seedWordsUrl) {
-    fetch(seedWordsUrl)
-        .then(response => response.text())
-        .then(data => {
-            initializeSeedWordsFromString(data);
-        })
-        .catch(error => console.log(error));
-    
-    return SEED_INITIALIZED;
+async function initializeSeedWordsFromUrl(seedWordsUrl) {
+    const response = await fetch(seedWordsUrl);
+    if (response.ok != true) {
+        return false;
+    }
+    var seedWordsRaw = await response.text();
+    var ret = await initializeSeedWordsFromString(seedWordsRaw);
+    return ret;
 }
 
 async function initializeSeedWordsFromString(seedWordsRaw) {
@@ -50,7 +49,7 @@ async function initializeSeedWordsFromString(seedWordsRaw) {
         if (columns.length != 3) {
             continue;
         }
-        console.log(columns[0]);
+        
         var key = columns[0]; //word
         var left = columns[1];
         var right = columns[2];
@@ -64,12 +63,9 @@ async function initializeSeedWordsFromString(seedWordsRaw) {
     }
 
     var seedhashstr = await sha256digestMessage(seedMapHashMessage);
-
     if (seedhashstr === SEED_HASH) {
-        console.log("seed hashes match");
+        
     } else {
-        console.log("seed hashes don't match");
-        console.log(SEED_HASH);
         return false;
     }
 
@@ -95,15 +91,23 @@ async function initializeSeedWordsFromString(seedWordsRaw) {
     return true;
 }
 
-function getWordListFromSeed(seed) {
-    var seedArray = seed.split(",");
+function getWordListFromSeedIndiceString(seedIndiceString) {
+    if (SEED_INITIALIZED == false) {
+        return null;
+    }
+    var seedArray = seedIndiceString.split(",");
+
+    return getWordListFromSeedArray(seedArray);
+}
+function getWordListFromSeedArray(seedArray) {
+    if (SEED_INITIALIZED == false) {
+        return null;
+    }
     
     if (seedArray.length < 2) {
-        console.log("seed array not specified");
         return null;
     }
     if (seedArray.length % 2 != 0) {
-        console.log("seed should be even in length");
         return null;
     }
 
@@ -112,7 +116,6 @@ function getWordListFromSeed(seed) {
     for (i = 0; i < seedArray.length; i = i + 2) {
         var key = getSeedKey(seedArray[i], seedArray[i + 1]);
         if (SEED_REVERSE_MAP.has(key) === false) {
-            console.log("seed does not exist");
             return null;
         }
         seedWordArray[wordIndex] = SEED_REVERSE_MAP.get(key);
@@ -123,23 +126,26 @@ function getWordListFromSeed(seed) {
 }
 
 function getFriendlySeedIndex(index) {
+    if (SEED_INITIALIZED == false) {
+        return null;
+    }
     if (index < 0 || index > (SEED_LENGTH / 2) - 1) {
-        console.log("index out of bounds");
         return null;
     }
     return SEED_FRIENDLY_INDEX_ARRAY[index];
 }
 
 function getIndicesFromFriendlySeed(word) {
+    if (SEED_INITIALIZED == false) {
+        return null;
+    }
     word = word.toLowerCase();
     if (SEED_MAP.has(word) === false) {
-        console.log("seed word does not exist");
         return null;
     }
     var byteIndicesString = SEED_MAP.get(word);
     var temp = getSeedByteIndicesFromString(byteIndicesString);
     if (temp === null) {
-        console.log("getSeedByteIndicesFromString returned null");
         return null;
     }
     var byteArray = new Array(2);
@@ -148,30 +154,35 @@ function getIndicesFromFriendlySeed(word) {
     return byteArray;
 }
 
-function getSeedFromWordList(wordList) {
-    var seedArray = new Array(wordList.length * 2);
+function getSeedIndexArrayFromSeedWordList(wordList) {
+    if (SEED_INITIALIZED == false) {
+        return null;
+    }
+    var wordList = wordList.split(",");
+    var seedIndexArray = new Array(wordList.length * 2);
     var seedIndex = 0;
     for (i = 0; i < wordList.length; i = i + 1) {
         var byteArray = getIndicesFromFriendlySeed(wordList[i]);
         if (byteArray == null) {
-            console.log("getSeedFromWordList error");
             return null;
         }
-        seedArray[seedIndex] = byteArray[0];
-        seedArray[seedIndex + 1] = byteArray[1];
+        seedIndexArray[seedIndex] = byteArray[0];
+        seedIndexArray[seedIndex + 1] = byteArray[1];
         seedIndex = seedIndex + 2;
     }
 
-    return seedArray;
+    return seedIndexArray;
 }
 
-function getWordFromFriendlySeed(friendlySeedIndex, seed) {    
+function getWordFromFriendlySeed(friendlySeedIndex, seedIndiceStringArray) {   
+    if (SEED_INITIALIZED == false) {
+        return null;
+    }
     if (friendlySeedIndex < 0 || friendlySeedIndex > (SEED_LENGTH / 2) - 1) { //0 to 39 is valid range
-        console.log("invalid index");
         return null;
     }
 
-    var seedArray = seed.split(",");
+    var seedArray = seedIndiceStringArray.split(",");
     var actualSeedValue1 = seedArray[SEED_FRIENDLY_INDEX_REVERSE_ARRAY[friendlySeedIndex][0]];
     var actualSeedValue2 = seedArray[SEED_FRIENDLY_INDEX_REVERSE_ARRAY[friendlySeedIndex][1]];
     var seedKey = getSeedKey(actualSeedValue1, actualSeedValue2);
@@ -182,29 +193,32 @@ function getWordFromFriendlySeed(friendlySeedIndex, seed) {
 }
 
 function doesSeedWordExist(word) {
+    if (SEED_INITIALIZED == false) {
+        return null;
+    }
     word = word.toLowerCase();
     if (SEED_MAP.has(word) === false) {
-        console.log("word does not exist in seed map");
         return false;
     }
 
     return true;
 }
 
-function verifySeedWord(friendlySeedIndex, word, seed) {
-    word = word.toLowerCase();
-    if (SEED_MAP.has(word) === false) {
-        console.log("word does not exist in seed map");
+function verifySeedWord(friendlySeedIndex, seedWord, seedIndiceStringArray) {
+    if (SEED_INITIALIZED == false) {
+        return null;
+    }
+    seedWord = seedWord.toLowerCase();
+    if (SEED_MAP.has(seedWord) === false) {
         return false;
     }
 
-    var actualWord = getWordFromFriendlySeed(friendlySeedIndex, seed);
-    if (actualWord === null) {
-        console.log("actual word is null");
+    var actualSeedWord = getWordFromFriendlySeed(friendlySeedIndex, seedIndiceStringArray);
+    if (actualSeedWord === null) {
         return false;
     }
 
-    if (word === actualWord) {
+    if (seedWord === actualSeedWord) {
         return true;
     }
 

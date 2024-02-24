@@ -1,10 +1,106 @@
 <html>
 <head>
     <title>Seed Words</title>
-    <script src="seedwords.js"></script>
+    <script src="./seedwords.js"></script>
 </head>
 <body>
-    <a href="#" onclick="initializeSeedWordsFromUrl('https://downloads.dpdocs.org/seedtest/seedwords.txt');">Load Seeds</a>
+    <div style="background-color:#f0f0f0;width:fit-content;">
+        <p style="font-weight:bold;">Result</p>
+        <div id="divResult" style="background-color:#ffd800;width:fit-content;">
+
+        </div>
+    </div>
+    <div style="background-color:#c0c0c0;width:fit-content;padding: 10px;">
+        <input type="text" id="txtUrl" placeholder="url" value="seedwords.txt" />
+        <script type="text/javascript">
+            function initializeSeedWordsFromUrlTest() {
+                initializeSeedWordsFromUrl(document.getElementById('txtUrl').value)
+                    .then(ret => {
+                        document.getElementById('divResult').innerHTML = ret;
+                    })
+                    .catch((error) => {
+                        document.getElementById('divResult').innerHTML = "Error occurred!: " + error;
+                    });
+            }
+        </script>
+        <p>
+            <a href="#" onclick="return initializeSeedWordsFromUrlTest();">initializeSeedWordsFromUrl</a>
+        </p>
+    </div>
+
+    <div style="background-color:#e0e0e0;width:fit-content;padding: 10px;">
+        <input type="text" id="txtSeedIndiceString" placeholder="Comma Separated Seed Indice String" value="0,1,200,105" />
+        <script type="text/javascript">
+            function getWordListFromSeedIndiceStringTest() {
+                document.getElementById('divResult').innerHTML = getWordListFromSeedIndiceString(document.getElementById('txtSeedIndiceString').value);
+            }
+        </script>
+        <p>
+            <a href="#" onclick="return getWordListFromSeedIndiceStringTest();">getWordListFromSeedIndiceString</a>
+        </p>
+    </div>
+
+    <div style="background-color:#c0c0c0;width:fit-content;padding: 10px;">
+        <input type="text" id="txtSeedIndex" placeholder="Seed Index" value="16" />
+        <script type="text/javascript">
+            function getFriendlySeedIndexTest() {
+                document.getElementById('divResult').innerHTML = getFriendlySeedIndex(document.getElementById('txtSeedIndex').value);
+            }
+        </script>
+        <p>
+            <a href="#" onclick="return getFriendlySeedIndexTest();">getFriendlySeedIndex</a>
+        </p>
+    </div>
+
+    <div style="background-color:#e0e0e0;width:fit-content;padding: 10px;">
+        <input type="text" id="txtFriendlySeedWord" placeholder="Seed Word" value="septuro" />
+        <script type="text/javascript">
+            function getIndicesFromFriendlySeedTest() {
+                document.getElementById('divResult').innerHTML = getIndicesFromFriendlySeed(document.getElementById('txtFriendlySeedWord').value);
+            }
+        </script>
+        <p>
+            <a href="#" onclick="return getIndicesFromFriendlySeedTest();">getIndicesFromFriendlySeed</a>
+        </p>
+    </div>
+
+    <div style="background-color:#c0c0c0;width:fit-content;padding: 10px;">
+        <input type="text" id="txtFriendlySeedWords" placeholder="Comma Separated Seed Words" value="ababate,septuro" />
+        <script type="text/javascript">
+            function getSeedIndexArrayFromSeedWordListTest() {
+                document.getElementById('divResult').innerHTML = getSeedIndexArrayFromSeedWordList(document.getElementById('txtFriendlySeedWords').value);
+            }
+        </script>
+        <p>
+            <a href="#" onclick="return getSeedIndexArrayFromSeedWordListTest();">getSeedIndexArrayFromSeedWordList</a>
+        </p>
+    </div>
+
+    <div style="background-color:#e0e0e0;width:fit-content;padding: 10px;">
+        <input type="text" id="txtSeedWordTest" placeholder="Seed Word" value="septuro" />
+        <script type="text/javascript">
+            function doesSeedWordExistTest() {
+                document.getElementById('divResult').innerHTML = doesSeedWordExist(document.getElementById('txtSeedWordTest').value);
+            }
+        </script>
+        <p>
+            <a href="#" onclick="return doesSeedWordExistTest();">doesSeedWordExist</a>
+        </p>
+    </div>
+
+    <div style="background-color:#c0c0c0;width:fit-content;padding: 10px;">
+        <input type="text" id="txtFriendlySeedIndex" placeholder="Friendly Seed Index" value="0" />
+        <input type="text" id="txtVerifySeedWordTest" placeholder="Seed Word" value="septuro" />
+        <input type="text" id="txtSeedIndiceStringArray" placeholder="Seed Indice Array" value="200,105,123,1,67,99,132,255,112,44,245,2,9,44,41,23,87,11,56,3,90,123,55,25,87,190,201,23,56,87,34,22" />
+        <script type="text/javascript">
+            function verifySeedWordTest() {
+                document.getElementById('divResult').innerHTML = verifySeedWord(document.getElementById('txtFriendlySeedIndex').value, document.getElementById('txtVerifySeedWordTest').value, document.getElementById('txtSeedIndiceStringArray').value);
+            }
+        </script>
+        <p>
+            <a href="#" onclick="return verifySeedWordTest();">verifySeedWord</a>
+        </p>
+    </div>
 </body>
 
 </html>
