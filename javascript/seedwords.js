@@ -2,7 +2,7 @@ const SEED_LENGTH = 80;
 
 const SEED_MAP = new Map(); //key is word, items are string corresponding to index1 and index2
 const SEED_REVERSE_MAP = new Map(); //vice-versa of SEED_MAP
-const SEED_HASH = "afd26617fb155784a9e89ff35bd1cc40d6715a0f8fbc4f9f535b8ec6fa2bfb11";
+const SEED_HASH = "9289cec415e1d9db8712174987014ebbf3fff570add97793fe400aeb53740757";
 const SEED_FRIENDLY_INDEX_ARRAY = ['a1', 'a2', 'a3', 'a4', 'b1', 'b2', 'b3', 'b4', 'c1', 'c2', 'c3', 'c4', 'd1', 'd2', 'd3', 'd4', 'e1', 'e2', 'e3', 'e4', 'f1', 'f2', 'f3', 'f4', 'g1', 'g2', 'g3', 'g4', 'h1', 'h2', 'h3', 'h4', 'i1', 'i2', 'i3', 'i4', 'j1', 'j2', 'j3', 'j4'];
 var SEED_FRIENDLY_INDEX_REVERSE_ARRAY = [];
 var SEED_INITIALIZED = false;
@@ -57,14 +57,17 @@ async function initializeSeedWordsFromString(seedWordsRaw) {
             right = columns[2].substring(0, columns[2].length - 1);
         }
         var val = getSeedKey(left, right); //indices
-        seedMapHashMessage = key + "=" + val + ",";
+        seedMapHashMessage = seedMapHashMessage + key + "=" + val + ",";
         SEED_MAP.set(key, val);
         SEED_REVERSE_MAP.set(val, key);
     }
 
     var seedhashstr = await sha256digestMessage(seedMapHashMessage);
+    if (seedhashstr === undefined) {
+        return false;
+    }
+
     if (seedhashstr === SEED_HASH) {
-        
     } else {
         return false;
     }
