@@ -3,7 +3,7 @@ const SEED_LENGTH = 80;
 const SEED_MAP = new Map(); //key is word, items are string corresponding to index1 and index2
 const SEED_REVERSE_MAP = new Map(); //vice-versa of SEED_MAP
 const SEED_HASH = "9289cec415e1d9db8712174987014ebbf3fff570add97793fe400aeb53740757";
-const SEED_FRIENDLY_INDEX_ARRAY = ['a1', 'a2', 'a3', 'a4', 'b1', 'b2', 'b3', 'b4', 'c1', 'c2', 'c3', 'c4', 'd1', 'd2', 'd3', 'd4', 'e1', 'e2', 'e3', 'e4', 'f1', 'f2', 'f3', 'f4', 'g1', 'g2', 'g3', 'g4', 'h1', 'h2', 'h3', 'h4', 'i1', 'i2', 'i3', 'i4', 'j1', 'j2', 'j3', 'j4'];
+const SEED_FRIENDLY_INDEX_ARRAY = ['a1', 'a2', 'a3', 'a4', 'b1', 'b2', 'b3', 'b4', 'c1', 'c2', 'c3', 'c4', 'd1', 'd2', 'd3', 'd4', 'e1', 'e2', 'e3', 'e4', 'f1', 'f2', 'f3', 'f4', 'g1', 'g2', 'g3', 'g4', 'h1', 'h2', 'h3', 'h4', 'i1', 'i2', 'i3', 'i4', 'j1', 'j2', 'j3', 'j4', 'k1', 'k2', 'k3', 'k4', 'l1', 'l2', 'l3', 'l4'];
 var SEED_FRIENDLY_INDEX_REVERSE_ARRAY = [];
 var SEED_INITIALIZED = false;
 async function sha256digestMessage(message) {
