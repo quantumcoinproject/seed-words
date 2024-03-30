@@ -1,4 +1,4 @@
-const SEED_LENGTH = 80;
+const SEED_LENGTH = 96;
 
 const SEED_MAP = new Map(); //key is word, items are string corresponding to index1 and index2
 const SEED_REVERSE_MAP = new Map(); //vice-versa of SEED_MAP
@@ -94,6 +94,14 @@ async function initializeSeedWordsFromString(seedWordsRaw) {
     return true;
 }
 
+function getSeedWordFromNumberPair(num1, num2) {
+    if (num1 < 0 || num1 > 255 || num2 < 0 || num2 > 255) {
+        throw new Error("num2 numbers out of range");
+    }
+    var key = getSeedKey(seedArray[num1], seedArray[num2]);
+    return SEED_REVERSE_MAP.get(key);
+}
+
 function getWordListFromSeedIndiceString(seedIndiceString) {
     if (SEED_INITIALIZED == false) {
         return null;
@@ -157,11 +165,11 @@ function getIndicesFromFriendlySeed(word) {
     return byteArray;
 }
 
-function getSeedIndexArrayFromSeedWordList(wordList) {
+function getSeedArrayFromSeedWordList(wordList) {
     if (SEED_INITIALIZED == false) {
         return null;
     }
-    var wordList = wordList.split(",");
+
     var seedIndexArray = new Array(wordList.length * 2);
     var seedIndex = 0;
     for (i = 0; i < wordList.length; i = i + 1) {
@@ -177,7 +185,7 @@ function getSeedIndexArrayFromSeedWordList(wordList) {
     return seedIndexArray;
 }
 
-function getWordFromFriendlySeed(friendlySeedIndex, seedIndiceStringArray) {   
+function getWordFromFriendlySeed(friendlySeedIndex, friendlySeedArray) {   
     if (SEED_INITIALIZED == false) {
         return null;
     }
@@ -185,9 +193,8 @@ function getWordFromFriendlySeed(friendlySeedIndex, seedIndiceStringArray) {
         return null;
     }
 
-    var seedArray = seedIndiceStringArray.split(",");
-    var actualSeedValue1 = seedArray[SEED_FRIENDLY_INDEX_REVERSE_ARRAY[friendlySeedIndex][0]];
-    var actualSeedValue2 = seedArray[SEED_FRIENDLY_INDEX_REVERSE_ARRAY[friendlySeedIndex][1]];
+    var actualSeedValue1 = friendlySeedArray[SEED_FRIENDLY_INDEX_REVERSE_ARRAY[friendlySeedIndex][0]];
+    var actualSeedValue2 = friendlySeedArray[SEED_FRIENDLY_INDEX_REVERSE_ARRAY[friendlySeedIndex][1]];
     var seedKey = getSeedKey(actualSeedValue1, actualSeedValue2);
     if (SEED_REVERSE_MAP.has(seedKey) === false) {
         return null;
@@ -207,7 +214,7 @@ function doesSeedWordExist(word) {
     return true;
 }
 
-function verifySeedWord(friendlySeedIndex, seedWord, seedIndiceStringArray) {
+function verifySeedWord(friendlySeedIndex, seedWord, seedArray) {
     if (SEED_INITIALIZED == false) {
         return null;
     }
@@ -216,7 +223,7 @@ function verifySeedWord(friendlySeedIndex, seedWord, seedIndiceStringArray) {
         return false;
     }
 
-    var actualSeedWord = getWordFromFriendlySeed(friendlySeedIndex, seedIndiceStringArray);
+    var actualSeedWord = getWordFromFriendlySeed(friendlySeedIndex, seedArray);
     if (actualSeedWord === null) {
         return false;
     }
