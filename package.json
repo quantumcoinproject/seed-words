@@ -1,6 +1,6 @@
 {
   "name": "seed-words",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Seed Words JS SDK",
   "main": "seedwords.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "seeds",
     "quantumcoin"
   ],
-  "author": "Quantum Coin Community",
+  "author": "QuantumCoin Community",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/quantumcoinproject/seed-words/issues"
