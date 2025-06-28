@@ -1,8 +1,12 @@
 <a name="module_seed-words"></a>
 
 ## seed-words
-Seed Words is a list of English words to be used in mnemonic seed phrases. There are a total of 256 x 256 = 65536 words. They can be used to represent any arbitrary 2 byte array with a singlehuman-readable word. To represent a 16 byte array, 8 words are required, to represent a 32 byte array, 16 words are required and so on. Seed Words JS SDK provides programmatic access.Requires Node.js version v20.18.1 or higherInstallation:npm install seed-words --save//Adding reference:var seedwords = require('seed-words');//Initialize the SDK first before invoking any other functionseedwords.initialize().then((initResult) => {     if (initResult === false) {         console.log("error initializing");     } else {        console.log("initialized");     }}
+Seed Words is a list of English words to be used in mnemonic seed phrases. There are a total of 256 x 256 = 65536 words. They can be used to represent any arbitrary 2 byte array with a singlehuman-readable word. To represent a 16 byte array, 8 words are required, to represent a 32 byte array, 16 words are required and so on. Seed Words JS SDK provides programmatic access.
 
+**Example**  
+```js
+Requires Node.js version v20.18.1 or higherInstallation:npm install seed-words --save//Adding reference:var seedwords = require('seed-words');//Initialize the SDK first before invoking any other functionseedwords.initialize().then((initResult) => {     if (initResult === false) {         console.log("error initializing");     } else {        console.log("initialized");     }}
+```
 
 * [seed-words](#module_seed-words)
     * [~initialize()](#module_seed-words..initialize) ⇒ <code>Promise.&lt;boolean&gt;</code>
