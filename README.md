@@ -1,19 +1,63 @@
-# Seed Words
-Seed Words is a list of English words to be used in mnemonic seed phrases. There are a total of 256 x 256 = 65536 words. They can be used to represent any arbitrary 2 byte array with a single human readable word. To represent a 16 byte array, 8 words are required, to represent a 32 byte array, 16 words are required and so on.
+<a name="module_seed-words"></a>
 
-# How to use
-The file seedwords.txt contains 3 columns. The first column is the human readable word and the remaining two columns are used to lookup the corresponding bytes. For example, say an array consists of the following ten bytes: 
+## seed-words
+Seed Words is a list of English words to be used in mnemonic seed phrases. There are a total of 256 x 256 = 65536 words. They can be used to represent any arbitrary 2 byte array with a singlehuman-readable word. To represent a 16 byte array, 8 words are required, to represent a 32 byte array, 16 words are required and so on. Seed Words JS SDK provides programmatic access.Requires Node.js version v20.18.1 or higherInstallation:npm install seed-words --save//Adding reference:var seedwords = require('seed-words');//Initialize the SDK first before invoking any other functionseedwords.initialize().then((initResult) => {     if (initResult === false) {         console.log("error initializing");     } else {        console.log("initialized");     }}
 
-```
-123,20,55,221,1,67,0,112,65,77
-```
 
-This array can be represented with the following five words:
+* [seed-words](#module_seed-words)
+    * [~initialize()](#module_seed-words..initialize) ⇒ <code>Promise.&lt;boolean&gt;</code>
+    * [~getAllSeedWords()](#module_seed-words..getAllSeedWords) ⇒ <code>array</code>
+    * [~getWordListFromSeedArray(seedArray)](#module_seed-words..getWordListFromSeedArray) ⇒ <code>array</code>
+    * [~getSeedArrayFromWordList(wordList)](#module_seed-words..getSeedArrayFromWordList) ⇒ <code>array</code>
+    * [~doesSeedWordExist(word)](#module_seed-words..doesSeedWordExist) ⇒ <code>boolean</code>
 
-```
-knox,curler,accoil,abided,dodding
-```
+<a name="module_seed-words..initialize"></a>
 
-We do this by picking first two bytes in the array, finding the corresponding word for them in the file, then select the next two bytes and so on.
+### seed-words~initialize() ⇒ <code>Promise.&lt;boolean&gt;</code>
+The initialize function has to be called before attempting to invoke any other function. This function should be called only once.
 
-This method is useful in providing a human readable representation for arbitrary byte arrays. One usecase is in the blockchain world; random bytes can be generated that can subsequently be used as input to cryptographic algorithms for creating key pairs. These random bytes can be represented as seed phrases with this method.
+**Kind**: inner method of [<code>seed-words</code>](#module_seed-words)  
+**Returns**: <code>Promise.&lt;boolean&gt;</code> - Returns a promise of type boolean; true if the initialization succeeded, else false.  
+<a name="module_seed-words..getAllSeedWords"></a>
+
+### seed-words~getAllSeedWords() ⇒ <code>array</code>
+The getAllSeedWords function returns all the seed words in an array.
+
+**Kind**: inner method of [<code>seed-words</code>](#module_seed-words)  
+**Returns**: <code>array</code> - Returns an array with the list of all seed words.  
+<a name="module_seed-words..getWordListFromSeedArray"></a>
+
+### seed-words~getWordListFromSeedArray(seedArray) ⇒ <code>array</code>
+The getWordListFromSeedArray function returns the word list corresponding to a byte array.
+
+**Kind**: inner method of [<code>seed-words</code>](#module_seed-words)  
+**Returns**: <code>array</code> - Returns the array of words (string) corresponding to the input seed array. Returns null on failure. This function can fail if the seedArray is invalid or initialize() hasn't been called.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| seedArray | <code>array</code> | An array of bytes. This array should have an even number of elements. |
+
+<a name="module_seed-words..getSeedArrayFromWordList"></a>
+
+### seed-words~getSeedArrayFromWordList(wordList) ⇒ <code>array</code>
+The getSeedArrayFromWordList function a byte array that corresponds to the seed word list.
+
+**Kind**: inner method of [<code>seed-words</code>](#module_seed-words)  
+**Returns**: <code>array</code> - Returns an array of bytes that correspond to the wordList. Returns null on failure. This function can fail if initialize() function was not called or the word doesn't exist.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| wordList | <code>array</code> | An array of seed words. |
+
+<a name="module_seed-words..doesSeedWordExist"></a>
+
+### seed-words~doesSeedWordExist(word) ⇒ <code>boolean</code>
+The doesSeedWordExist function returns the word list corresponding to a byte array.
+
+**Kind**: inner method of [<code>seed-words</code>](#module_seed-words)  
+**Returns**: <code>boolean</code> - Returns true if the seed word exists. Returns false if it doesn't exist. Returns null on failure. This function can fail if initialize() function was not called.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| word | <code>string</code> | A seed word to find whether it exists in the list or not. |
+
